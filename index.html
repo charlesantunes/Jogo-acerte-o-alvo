@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Desenho</title>
 </head>
 
 <body>
     <section>
 
-        <h2 style="margin-left: 220px;">Acerte o alvo</h2>
+        <h2>Desenhando com canvas</h2>
 
         <canvas width="600" height="400">
         </canvas>
@@ -26,6 +25,9 @@
             var screen = document.querySelector('canvas');
             var pincel = screen.getContext('2d');
             var position = document.querySelector('.coord')
+            var raio = 10
+            var xAleatorio;
+            var yAleatorio;
 
             function alvo(x, y, raio, cor) {
                 pincel.fillStyle = cor;
@@ -34,19 +36,11 @@
                 pincel.fill();
             }
 
-            raio = 10
-
-
             function limpaTela() {
                 pincel.clearRect(0, 0, 600, 400)
             }
 
-            var y = 200;
-            function largada() {
-                var x = Math.floor(Math.random() * (570 - 30) + 30);
-                var y = Math.floor(Math.random() * (370 - 30) + 30);
-
-                limpaTela();
+            function desenhaAlvo(x,y) {
                 pincel.fillStyle = 'gray';
                 pincel.fillRect(0, 0, 600, 400)
                 alvo(x, y, raio + 20, 'red');
@@ -56,9 +50,36 @@
                 position.innerHTML = x + ' , ' + y
             }
 
-            setInterval(largada, 2000)
+            function sorteiaPosicao(posicaoMaxima) {
+                return Math.floor(Math.random() * posicaoMaxima);
+            }
+            
+            function alternaAlvo() {                
+                limpaTela();
+                xAleatorio = sorteiaPosicao(600)
+                yAleatorio = sorteiaPosicao(400)
+                desenhaAlvo(xAleatorio, yAleatorio);
+            }
+            
+            setInterval(alternaAlvo, 1000)
 
+            function dispara(event) {
+                var x = event.pageX - screen.offsetLeft;
+                var y = event.pageY - screen.offsetTop;
 
+                if(
+                    (x < xAleatorio + raio)&&
+                    (x > xAleatorio - raio)&&
+                    (y < yAleatorio + raio)&&
+                    (y > yAleatorio - raio)
+                  )
+                {
+
+                    alert('acertou')
+                }
+            }
+
+            screen.onclick = dispara;
         </script>
     </section>
 </body>
